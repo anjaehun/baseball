@@ -1,5 +1,6 @@
-package com.example.baseball.user;
+package com.example.baseball.user.entity;
 
+import com.example.baseball.user.enumType.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
-public class User implements UserDetails {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
