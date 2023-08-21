@@ -24,7 +24,7 @@ public class TeamMemberEntity {
 
     @ManyToOne
     @JoinColumn(name = "team_id")
-    private TeamEntity user;
+    private TeamEntity team;
 
     // 선수 이름
     @Column(columnDefinition = "VARCHAR(255) COMMENT '선수 이름'")
