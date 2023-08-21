@@ -24,6 +24,14 @@ public class PitcherRecordEntity {
     private TeamEntity team;
 
     /**
+     * 소속 팀
+     */
+
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '팀 네임 '")
+    private String teamName;
+
+
+    /**
      * 기본 정보
      */
     // 선수 이름

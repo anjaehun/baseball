@@ -1,5 +1,6 @@
 package com.example.baseball.teamMember;
 
+import com.example.baseball.pitcherRecord.PitcherRecordEntity;
 import com.example.baseball.team.TeamEntity;
 import com.example.baseball.user.entity.UserEntity;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class TeamMemberEntity {
     @JoinColumn(name = "team_id")
     private TeamEntity team;
 
+
     // 선수 이름
     @Column(columnDefinition = "VARCHAR(255) COMMENT '선수 이름'")
     private String name;
@@ -38,7 +40,7 @@ public class TeamMemberEntity {
     @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '등번호'")
     private Integer jerseyNumber;
 
-    // 등 번호
+    // 키
     @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '키'")
     private Integer height;
 

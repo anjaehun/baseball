@@ -14,13 +14,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "homeTeamLineUpEntity")
+@Table(name = "teamLineUpEntity")
 public class TeamLineupEntity {
 
-
-    @ManyToOne
-    @JoinColumn(name = "team_id")
-    private TeamEntity team;
+    @Id
+    @GeneratedValue(strategy =  GenerationType.AUTO)
+    private Long teamLineupId;
 
     @ManyToOne
     @JoinColumn(name = "team_member_id")
@@ -29,7 +28,7 @@ public class TeamLineupEntity {
     @Enumerated(EnumType.STRING)
     private HomeAwayYnRole homeAwayYnRole;
 
-    // 투수
+    // 경기 이름
     @Column(columnDefinition = "VARCHAR(255) COMMENT '경기 이름'")
     private String gameName;
 
@@ -73,45 +72,47 @@ public class TeamLineupEntity {
     @Column(columnDefinition = "VARCHAR(255) COMMENT '지명타자'")
     private String designatedHitter;
 
+
+    // 타순
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '1번타자'")
+    private String batter1;
+
+    // 타순
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '2번타자'")
+    private String batter2;
+
+    // 타순
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '3번타자'")
+    private String batter3;
+
+    // 타순
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '4번타자'")
+    private String batter4;
+
+    // 타순
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '5번타자'")
+    private String batter5;
+
+    // 타순
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '6번타자'")
+    private String batter6;
+
+    // 타순
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '7번타자'")
+    private String batter7;
+
+    // 타순
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '8번타자'")
+    private String batter8;
+
+    // 타순
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '9번타자'")
+    private String batter9;
+
     // 후보1
     @Column(columnDefinition = "VARCHAR(255) COMMENT '후보 1'")
     private String candidate1;
 
-    // 타순
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '1번타자'")
-    private String Batter1;
-
-    // 타순
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '2번타자'")
-    private String Batter2;
-
-    // 타순
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '3번타자'")
-    private String Batter3;
-
-    // 타순
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '4번타자'")
-    private String Batter4;
-
-    // 타순
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '5번타자'")
-    private String Batter5;
-
-    // 타순
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '6번타자'")
-    private String Batter6;
-
-    // 타순
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '7번타자'")
-    private String Batter7;
-
-    // 타순
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '8번타자'")
-    private String Batter8;
-
-    // 타순
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '8번타자'")
-    private String Batter9;
 
     // 후보2
     @Column(columnDefinition = "VARCHAR(255) COMMENT '후보 2'")

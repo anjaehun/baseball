@@ -20,7 +20,10 @@ public class TeamEntity {
     private Long teamId;
 
     @Column(columnDefinition = "VARCHAR(255) COMMENT '창설자 닉네임'")
-    private String nickname ;
+    private String masterNickname ;
+
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '창설자 닉네임'")
+    private String masterName ;
 
     @Column(columnDefinition = "VARCHAR(255) COMMENT '팀 이름'")
     private String teamName;
@@ -36,8 +39,8 @@ public class TeamEntity {
 
 
 
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '팀이미지2'")
-    private String teamImg2;
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '팀이미지'")
+    private String teamImg;
 
 
     private LocalDateTime registerDt;
