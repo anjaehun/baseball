@@ -26,48 +26,6 @@ public class TeamService {
         this.teamRepository = teamRepository;
     }
 
-//    public StoreEntity write(StorePostRequest request) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        String email;
-//        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//            email = userDetails.getUsername(); // 사용자 이메일 정보를 추출
-//        } else {
-//            email = "기본 닉네임";
-//        }
-//
-//        // System.out.println("email: " + email);
-//
-//        String nickname = "";
-//        Optional<UserEntity> existingEmail = userRepository.findByEmail(email);
-//        if (existingEmail.isPresent()) {
-//            UserEntity user = existingEmail.get();
-//            // System.out.println(user);
-//            nickname = user.getNickname(); // 사용자의 닉네임을 얻음
-//        }
-//
-//        System.out.println(nickname);
-//
-//        LocalDateTime currentTime = LocalDateTime.now(); // 현재 시간 설정
-//
-//        var store = StoreEntity.builder()
-//                .storeName(request.getStoreName())
-//                .location(request.getLocation())
-//                .explanation(request.getExplanation())
-//                .xCoordinate(request.getXCoordinate())
-//                .yCoordinate(request.getYCoordinate())
-//                .author(nickname)
-//                .star(0.0)
-//                .storeImageUrlOne(request.getStoreImageUrlOne())
-//                .storeImageUrlTwo(request.getStoreImageUrlTwo())
-//                .storeImageUrlThree(request.getStoreImageUrlThree())
-//                .registerDt(currentTime)
-//                .isOpen(request.isOpen())
-//                .build();
-//        return storeRepository.save(store);
-//    }
-
     /**
      * 회원 정보를 가져 오는 역활
      * -> 접속중인 유저의 닉네임을 가져온다
