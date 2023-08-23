@@ -2,6 +2,7 @@ package com.example.baseball.team.service;
 
 import com.example.baseball.team.Request.TeamPostRequest;
 import com.example.baseball.team.TeamEntity;
+import com.example.baseball.team.exception.SameTeamNameException;
 import com.example.baseball.team.repository.TeamRepository;
 import com.example.baseball.user.entity.UserEntity;
 import com.example.baseball.user.repository.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -121,7 +123,7 @@ public class TeamService {
 
         return name;
     }
-    public TeamEntity postTeam(TeamPostRequest request) {
+    public TeamEntity postTeam(TeamPostRequest request) throws SameTeamNameException {
 
         String name = username();
         String nickname = userNickname();
@@ -130,11 +132,19 @@ public class TeamService {
         LocalDateTime currentTime = LocalDateTime.now();
 
         Optional<UserEntity> existingEmail = userRepository.findByNickname(nickname);
+        Optional<TeamEntity> existingTeamName = teamRepository.findByTeamName(request.getTeamName());
 
 
-            UserEntity user = existingEmail.get();
-            // System.out.println(user);
-
+        if (existingTeamName.isPresent()) {
+            throw new SameTeamNameException("팀의 이름이 중복되었습니다. 다시 시도해 주세요");
+        }
+        UserEntity user;
+        if (existingEmail.isPresent()) {
+            user = existingEmail.get();
+        } else {
+            // 사용자를 찾지 못한 경우에 대한 처리
+            user = null; // 또는 다른 값으로 설정
+        }
 
 
         if(request.getMainCoach().equals("미정")){
@@ -153,8 +163,6 @@ public class TeamService {
 
         teamRepository.save(store);
 
-
-
-        return null;
+        return store;
     }
 }
