@@ -1,8 +1,7 @@
 package com.example.baseball.teamMember;
 
-import com.example.baseball.pitcherRecord.PitcherRecordEntity;
 import com.example.baseball.team.TeamEntity;
-import com.example.baseball.user.entity.UserEntity;
+import com.example.baseball.teamMember.enumType.ManagerAcceptRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,6 +34,9 @@ public class TeamMemberEntity {
     // 선수 닉네임
     @Column(columnDefinition = "VARCHAR(255) COMMENT '선수 닉네임'")
     private String nickname;
+
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '감독 승인 여부'")
+    private ManagerAcceptRole managerAcceptRole;
 
     // 등 번호
     @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '등번호'")
