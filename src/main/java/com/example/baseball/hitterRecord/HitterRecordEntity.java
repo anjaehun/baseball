@@ -106,6 +106,10 @@ public class HitterRecordEntity {
     @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '도루 시도'")
     private double attempts;
 
+    // 삼진
+    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '삼진'")
+    private double strikeout;
+
     /**
      * 기본 기록을 토대로 한 계산 컬럼
      */

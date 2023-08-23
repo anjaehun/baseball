@@ -1,7 +1,6 @@
 package com.example.baseball.teamPerformance;
 
 import com.example.baseball.team.TeamEntity;
-import com.example.baseball.user.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

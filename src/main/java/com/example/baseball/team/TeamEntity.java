@@ -1,5 +1,6 @@
 package com.example.baseball.team;
 
+import com.example.baseball.user.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,10 +20,14 @@ public class TeamEntity {
     @GeneratedValue(strategy =  GenerationType.AUTO)
     private Long teamId;
 
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private UserEntity id;
+
     @Column(columnDefinition = "VARCHAR(255) COMMENT '창설자 닉네임'")
     private String masterNickname ;
 
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '창설자 닉네임'")
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '창설자 네임'")
     private String masterName ;
 
     @Column(columnDefinition = "VARCHAR(255) COMMENT '팀 이름'")
@@ -36,8 +41,6 @@ public class TeamEntity {
 
     @Column(columnDefinition = "VARCHAR(255) COMMENT '팀로고'")
     private String teamLogoImage;
-
-
 
     @Column(columnDefinition = "VARCHAR(255) COMMENT '팀이미지'")
     private String teamImg;

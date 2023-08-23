@@ -62,6 +62,12 @@ public class PitcherRecordEntity {
     @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '홈런'")
     private double homeRun;
 
+    // 홈런
+    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '삼진'")
+    private double strikeout;
+
+
+
     // 볼넷
     @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '무의도 볼넷'")
     private Double unintentionalWalk;
@@ -90,4 +96,8 @@ public class PitcherRecordEntity {
     // WHIP는 투수가 허용한 볼넷과 허용한 안타의 합을 이닝 수로 나눈 값을 나타냅니다
     @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '이닝당 주자 허용수'")
     private Double whip;
+
+    // 삼진 율
+    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '삼진율'")
+    private double strikeoutPercent;
 }
