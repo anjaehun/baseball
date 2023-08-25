@@ -1,8 +1,7 @@
 package com.example.baseball.hitterRecord;
 
 import com.example.baseball.hitterRecord.enumType.BattingType;
-import com.example.baseball.team.TeamEntity;
-import com.example.baseball.user.entity.UserEntity;
+import com.example.baseball.team.entity.TeamEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.example.baseball.teamMember;
 
-import com.example.baseball.team.TeamEntity;
+import com.example.baseball.team.entity.TeamEntity;
 import com.example.baseball.teamMember.enumType.ManagerAcceptRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

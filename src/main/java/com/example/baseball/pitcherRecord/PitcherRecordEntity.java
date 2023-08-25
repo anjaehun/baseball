@@ -1,6 +1,6 @@
 package com.example.baseball.pitcherRecord;
 
-import com.example.baseball.team.TeamEntity;
+import com.example.baseball.team.entity.TeamEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

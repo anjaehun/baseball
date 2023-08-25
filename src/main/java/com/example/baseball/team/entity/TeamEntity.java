@@ -1,4 +1,4 @@
-package com.example.baseball.team;
+package com.example.baseball.team.entity;
 
 import com.example.baseball.user.entity.UserEntity;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class TeamEntity {
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
-    private Long teamId;
+    private Integer teamId;
 
     @ManyToOne
     @JoinColumn(name = "id")

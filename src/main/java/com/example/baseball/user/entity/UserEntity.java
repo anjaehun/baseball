@@ -1,6 +1,5 @@
 package com.example.baseball.user.entity;
 
-import com.example.baseball.team.TeamEntity;
 import com.example.baseball.user.enumType.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

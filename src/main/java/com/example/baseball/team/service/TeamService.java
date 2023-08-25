@@ -1,7 +1,8 @@
 package com.example.baseball.team.service;
 
 import com.example.baseball.team.Request.TeamPostRequest;
-import com.example.baseball.team.TeamEntity;
+import com.example.baseball.team.entity.TeamEntity;
+import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.team.exception.SameTeamNameException;
 import com.example.baseball.team.repository.TeamRepository;
 import com.example.baseball.user.entity.UserEntity;
@@ -146,7 +147,6 @@ public class TeamService {
             user = null; // 또는 다른 값으로 설정
         }
 
-
         if(request.getMainCoach().equals("미정")){
             mainCoach = "공석";
         }
@@ -164,5 +164,18 @@ public class TeamService {
         teamRepository.save(store);
 
         return store;
+    }
+
+
+    public List<TeamEntity> getAllTeamList() {
+        List<TeamEntity> teamList = teamRepository.findAll();
+        return teamList;
+
+    }
+
+    public TeamEntity getTeamByTeamId(Integer teamId) throws NoTeamByOneException {
+        TeamEntity team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new NoTeamByOneException("팀정보가 없습니다"));
+        return team;
     }
 }
