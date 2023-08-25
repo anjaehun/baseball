@@ -7,7 +7,7 @@ package com.example.baseball.teamMember.enumType;
  *
  */
 
-public enum ManagerAcceptRole {
+public enum TeamFounderAcceptRole {
      TEAM_MEMBER_OK
     ,WAITING_FOR_APPROVAL
 

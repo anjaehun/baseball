@@ -28,6 +28,7 @@ public class SecurityConfiguration {
                 .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/api/v1/team/list").permitAll()
                 .antMatchers("/api/v1/team/list/{teamId}").permitAll()
+                .antMatchers("/api/v1/team/teamMember/{teamId}/membership/application").hasAuthority("USER")
                 .antMatchers("/api/v1/team/create").hasAuthority("USER") // 여기에 경로와 권한 설정 추가
                 .antMatchers("/api/v1/store/list").permitAll() // /api/v1/store/list 엔드포인트를 토큰 없이도 접근 허용
                 .anyRequest().authenticated()

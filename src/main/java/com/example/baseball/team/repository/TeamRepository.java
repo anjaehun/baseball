@@ -9,6 +9,4 @@ import java.util.Optional;
 public interface TeamRepository extends JpaRepository<TeamEntity, Integer> {
     Optional<TeamEntity> findByTeamName(String teamName);
 
-
-
 }

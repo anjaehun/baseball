@@ -27,48 +27,6 @@ public class TeamService {
         this.teamRepository = teamRepository;
     }
 
-//    public StoreEntity write(StorePostRequest request) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        String email;
-//        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//            email = userDetails.getUsername(); // 사용자 이메일 정보를 추출
-//        } else {
-//            email = "기본 닉네임";
-//        }
-//
-//        // System.out.println("email: " + email);
-//
-//        String nickname = "";
-//        Optional<UserEntity> existingEmail = userRepository.findByEmail(email);
-//        if (existingEmail.isPresent()) {
-//            UserEntity user = existingEmail.get();
-//            // System.out.println(user);
-//            nickname = user.getNickname(); // 사용자의 닉네임을 얻음
-//        }
-//
-//        System.out.println(nickname);
-//
-//        LocalDateTime currentTime = LocalDateTime.now(); // 현재 시간 설정
-//
-//        var store = StoreEntity.builder()
-//                .storeName(request.getStoreName())
-//                .location(request.getLocation())
-//                .explanation(request.getExplanation())
-//                .xCoordinate(request.getXCoordinate())
-//                .yCoordinate(request.getYCoordinate())
-//                .author(nickname)
-//                .star(0.0)
-//                .storeImageUrlOne(request.getStoreImageUrlOne())
-//                .storeImageUrlTwo(request.getStoreImageUrlTwo())
-//                .storeImageUrlThree(request.getStoreImageUrlThree())
-//                .registerDt(currentTime)
-//                .isOpen(request.isOpen())
-//                .build();
-//        return storeRepository.save(store);
-//    }
-
     /**
      * 회원 정보를 가져 오는 역활
      * -> 접속중인 유저의 닉네임을 가져온다
@@ -151,7 +109,7 @@ public class TeamService {
             mainCoach = "공석";
         }
 
-        var store = TeamEntity.builder()
+        var team = TeamEntity.builder()
                 .masterName(name)
                 .masterNickname(nickname)
                 .teamName(request.getTeamName())
@@ -161,9 +119,9 @@ public class TeamService {
                 .id(user)
               .build();
 
-        teamRepository.save(store);
+        teamRepository.save(team);
 
-        return store;
+        return team;
     }
 
 
@@ -174,8 +132,14 @@ public class TeamService {
     }
 
     public TeamEntity getTeamByTeamId(Integer teamId) throws NoTeamByOneException {
-        TeamEntity team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new NoTeamByOneException("팀정보가 없습니다"));
-        return team;
+        Optional<TeamEntity> optionalTeam = teamRepository.findById(teamId);
+        System.out.println(optionalTeam);
+        
+
+        if (optionalTeam.isPresent()) {
+            return optionalTeam.get();
+        } else {
+            throw new NoTeamByOneException("팀정보가 없습니다");
+        }
     }
 }
