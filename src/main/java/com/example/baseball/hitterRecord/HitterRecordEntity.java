@@ -2,6 +2,7 @@ package com.example.baseball.hitterRecord;
 
 import com.example.baseball.hitterRecord.enumType.BattingType;
 import com.example.baseball.team.entity.TeamEntity;
+import com.example.baseball.teamMember.TeamMemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,10 @@ public class HitterRecordEntity {
     @ManyToOne
     @JoinColumn(name = "team_id") // 이 부분은 실제 팀 엔티티의 ID 컬럼과 연결
     private TeamEntity team;
+
+    @ManyToOne
+    @JoinColumn(name = "team_member_id") // 이 부분은 실제 팀 엔티티의 ID 컬럼과 연결
+    private TeamMemberEntity teamMember;
 
 
     /**
@@ -129,44 +134,7 @@ public class HitterRecordEntity {
     @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '도루 성공율'")
     private Double stolenBaseSuccessRate;
 
-// ...
 
-//    @Entity
-//    @Table(name = "hitterRecord")
-//    public class HitterRecordEntity {
-//
-//        // ... (기존 필드들)
-//
-//        // 타율 계산
-//        @Transient
-//        private Double battingAverage;
-//
-//        // 장타율 계산
-//        @Transient
-//        private Double sluggingPercentage;
-//
-//        // PrePersist: 엔티티가 생성되기 전에 호출되는 메서드
-//        @PrePersist
-//        @PreUpdate
-//        public void updateDerivedFields() {
-//            // 타율 계산: 안타 수 / 타수
-//            if (atBat > 0) {
-//                battingAverage = hit / atBat;
-//            } else {
-//                battingAverage = 0.0;
-//            }
-//
-//            // 장타율 계산
-//            double totalBases = hit + (2 * doubleHit) + (3 * tripleHit) + (4 * homeRun);
-//            if (atBat > 0) {
-//                sluggingPercentage = totalBases / atBat;
-//            } else {
-//                sluggingPercentage = 0.0;
-//            }
-//        }
-//
-//        // ... (Getter와 Setter)
-//    }
 
 
 

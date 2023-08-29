@@ -1,6 +1,7 @@
 package com.example.baseball.pitcherRecord;
 
 import com.example.baseball.team.entity.TeamEntity;
+import com.example.baseball.teamMember.TeamMemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,10 @@ public class PitcherRecordEntity {
     @ManyToOne
     @JoinColumn(name = "team_id") // 이 부분은 실제 팀 엔티티의 ID 컬럼과 연결
     private TeamEntity team;
+
+    @ManyToOne
+    @JoinColumn(name = "team_member_id") // 이 부분은 실제 팀 엔티티의 ID 컬럼과 연결
+    private TeamMemberEntity teamMember;
 
     /**
      * 소속 팀
