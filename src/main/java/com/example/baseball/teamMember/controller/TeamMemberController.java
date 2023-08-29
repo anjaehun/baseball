@@ -84,10 +84,7 @@ public class TeamMemberController {
             Map<String, String> response = new HashMap<>();
             response.put("alert", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-
         }
-
-
     }
 
 
