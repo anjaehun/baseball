@@ -5,10 +5,7 @@ import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.team.repository.TeamRepository;
 import com.example.baseball.teamMember.TeamMemberEntity;
 import com.example.baseball.teamMember.enumType.TeamFounderAcceptRole;
-import com.example.baseball.teamMember.exception.JerseyNumberAlreadyExistsException;
-import com.example.baseball.teamMember.exception.MemberAlreadyRegisteredException;
-import com.example.baseball.teamMember.exception.NoCreaterJoinException;
-import com.example.baseball.teamMember.exception.NoMasterJoinTeamException;
+import com.example.baseball.teamMember.exception.*;
 import com.example.baseball.teamMember.repository.TeamMemberRepository;
 import com.example.baseball.teamMember.request.TeamMemberApplicationRequest;
 import com.example.baseball.user.entity.UserEntity;
@@ -110,15 +107,11 @@ public class TeamMemberService {
         // 등번호 조회 후 있다면 예외처리
         if (teamMemberRepository.existsByTeamAndJerseyNumber(team, jerseyNumber)) {
             throw new JerseyNumberAlreadyExistsException("해당 등번호는 이미 사용 중입니다.");
-        } else {
-            System.out.println("등번호 중복 확인 통과");
         }
 
      // 사용자 중복 등록 확인
         if (teamMemberRepository.existsByTeamAndNameAndNickname(team, name, nickname)) {
             throw new MemberAlreadyRegisteredException("이미 등록된 사용자입니다.");
-        } else {
-            System.out.println("사용자 중복 등록 확인 통과");
         }
 
         // 창설자가 창설자의 팀을 가입했을 때의 에러
@@ -147,4 +140,37 @@ public class TeamMemberService {
     }
 
 
+    public TeamMemberEntity updateApproval(int teamId, int teamMemberId) throws NoTeamByOneException, NotTeamMasterNicknameException, approvedTeamMemberException {
+
+        // 닉네임
+        String nickname = userNickname();
+
+        TeamEntity team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new NoTeamByOneException("팀정보가 없습니다"));
+
+        String teamMasterNickname = team.getMasterNickname();
+        
+
+        TeamMemberEntity teamMember =  teamMemberRepository.findById(teamMemberId)
+                .orElseThrow(() -> new NoTeamByOneException("팀멤버가 없습니다"));
+
+        if(teamMember.getTeamFounderAcceptRole().equals(TeamFounderAcceptRole.TEAM_MEMBER_OK)){
+            throw new approvedTeamMemberException("이미 팀 멤버입니다.");
+        }
+
+
+        if(!(nickname.equals(teamMasterNickname))){
+            throw new NotTeamMasterNicknameException("팀 창설자만 승인을 할 수 있습니다. 다시 한번 확인해 주세요");
+        }
+
+        teamMember.setTeamFounderAcceptRole(TeamFounderAcceptRole.TEAM_MEMBER_OK);
+
+
+        teamMemberRepository.save(teamMember);
+
+
+
+        return teamMember;
+
+    }
 }

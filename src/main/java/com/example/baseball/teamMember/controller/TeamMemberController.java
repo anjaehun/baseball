@@ -1,14 +1,7 @@
 package com.example.baseball.teamMember.controller;
-
-import com.example.baseball.team.Request.TeamPostRequest;
-import com.example.baseball.team.entity.TeamEntity;
 import com.example.baseball.team.exception.NoTeamByOneException;
-import com.example.baseball.team.exception.SameTeamNameException;
 import com.example.baseball.teamMember.TeamMemberEntity;
-import com.example.baseball.teamMember.exception.JerseyNumberAlreadyExistsException;
-import com.example.baseball.teamMember.exception.MemberAlreadyRegisteredException;
-import com.example.baseball.teamMember.exception.NoCreaterJoinException;
-import com.example.baseball.teamMember.exception.NoMasterJoinTeamException;
+import com.example.baseball.teamMember.exception.*;
 import com.example.baseball.teamMember.request.TeamMemberApplicationRequest;
 import com.example.baseball.teamMember.service.TeamMemberService;
 import org.springframework.http.HttpStatus;
@@ -59,6 +52,42 @@ public class TeamMemberController {
             response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+
+    /**
+     *  팀 멤버 승인
+     * @param teamId
+     * @param teamMemberId
+     * @return
+     */
+    @PutMapping("/{teamId}/{teamMemberId}/membership/approval")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Object> teamUpdate(
+            @PathVariable int teamId,
+            @PathVariable int teamMemberId
+    ){
+        try {
+            TeamMemberEntity teamMemberEntity = teamMemberService.updateApproval(teamId, teamMemberId);
+            Map<String, Object> response = new HashMap<>();
+            response.put("승인 성공하였습니다!", "Success");
+            response.put("팀 정보 : ", teamMemberEntity);
+            return ResponseEntity.ok(response);
+        } catch (NoTeamByOneException e){
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }catch (NotTeamMasterNicknameException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }catch(approvedTeamMemberException e){
+            Map<String, String> response = new HashMap<>();
+            response.put("alert", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+        }
+
+
     }
 
 

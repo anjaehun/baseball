@@ -142,4 +142,10 @@ public class TeamService {
             throw new NoTeamByOneException("팀정보가 없습니다");
         }
     }
+
+
+
+
+
+
 }
