@@ -1,5 +1,9 @@
 package com.example.baseball.teamMember.service;
 
+import com.example.baseball.hitterRecord.HitterRecordEntity;
+import com.example.baseball.hitterRecord.repository.HitterRecordRepository;
+import com.example.baseball.pitcherRecord.PitcherRecordEntity;
+import com.example.baseball.pitcherRecord.repository.PitcherRecordRepository;
 import com.example.baseball.team.entity.TeamEntity;
 import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.team.repository.TeamRepository;
@@ -25,10 +29,16 @@ public class TeamMemberService {
 
     private final TeamMemberRepository teamMemberRepository;
 
-    public TeamMemberService(UserRepository userRepository, TeamRepository teamRepository, TeamMemberRepository teamMemberRepository) {
+    private final PitcherRecordRepository pitcherRecordRepository;
+
+    private final HitterRecordRepository hitterRecordRepository;
+
+    public TeamMemberService(UserRepository userRepository, TeamRepository teamRepository, TeamMemberRepository teamMemberRepository, PitcherRecordRepository pitcherRecordRepository, HitterRecordRepository hitterRecordRepository) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.teamMemberRepository = teamMemberRepository;
+        this.pitcherRecordRepository = pitcherRecordRepository;
+        this.hitterRecordRepository = hitterRecordRepository;
     }
 
     /**
@@ -149,26 +159,42 @@ public class TeamMemberService {
                 .orElseThrow(() -> new NoTeamByOneException("팀정보가 없습니다"));
 
         String teamMasterNickname = team.getMasterNickname();
-        
 
         TeamMemberEntity teamMember =  teamMemberRepository.findById(teamMemberId)
                 .orElseThrow(() -> new NoTeamByOneException("팀멤버가 없습니다"));
 
-        if(teamMember.getTeamFounderAcceptRole().equals(TeamFounderAcceptRole.TEAM_MEMBER_OK)){
-            throw new approvedTeamMemberException("이미 팀 멤버입니다.");
-        }
-
+//        if(teamMember.getTeamFounderAcceptRole().equals(TeamFounderAcceptRole.TEAM_MEMBER_OK)){
+//            throw new approvedTeamMemberException("이미 팀 멤버입니다.");
+//        }
 
         if(!(nickname.equals(teamMasterNickname))){
             throw new NotTeamMasterNicknameException("팀 창설자만 승인을 할 수 있습니다. 다시 한번 확인해 주세요");
         }
 
         teamMember.setTeamFounderAcceptRole(TeamFounderAcceptRole.TEAM_MEMBER_OK);
-
-
         teamMemberRepository.save(teamMember);
 
+        // 승인에 성공 하면 팀 정식 일원으로 인정이 되며, 그에 따라 투수 기록과
+        // 타자 기록이 생성된다. 또한 기본 기록은 전부 0이며, 경기의 결과에 따라 업데이트 된다.
 
+        var pitcherRecord = PitcherRecordEntity.builder()
+                .teamName(team.getTeamName())
+                .name(teamMember.getName())
+                .nickname(teamMember.getNickname())
+                .team(team)
+                .teamMember(teamMember)
+                .build();
+
+        var hitterRecord = HitterRecordEntity.builder()
+                .teamName(team.getTeamName())
+                .name(teamMember.getName())
+                .nickname(teamMember.getNickname())
+                .team(team)
+                .teamMember(teamMember)
+                .build();
+
+        pitcherRecordRepository.save(pitcherRecord);
+        hitterRecordRepository.save(hitterRecord);
 
         return teamMember;
 
