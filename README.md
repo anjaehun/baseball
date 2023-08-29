@@ -101,7 +101,8 @@ erd
 --------------------------------------
 
 
-![야구_기록_ver_0 1](https://github.com/anjaehun/baseball/assets/77096665/fda9c130-615e-47d3-a370-a41d7da96632)
+![image](https://github.com/anjaehun/baseball/assets/77096665/d89d4674-ec5b-4a07-87f4-b241a3fa8196)
+
 
 
   
