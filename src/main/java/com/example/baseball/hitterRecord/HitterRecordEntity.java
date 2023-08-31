@@ -63,55 +63,55 @@ public class HitterRecordEntity {
      */
 
     // 타수(타석에 들어간 횟수)
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '타수'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '타수'")
     private double atBat;
 
     // 안타
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '안타'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '안타'")
     private double hit;
 
     // 2루타
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '2루타'")
-    private double DoubleHit;
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '2루타'")
+    private double doubleHit;
 
     // 3루타
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '3루타'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '3루타'")
     private double tripleHit;
 
     // 홈런
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '홈런'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '홈런'")
     private double homeRun;
 
     // 볼넷
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '무의도 볼넷'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '무의도볼넷'")
     private Double unintentionalWalk;
 
     // 고의 사구
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '고의 사구'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '고의사구'")
     private Double intentionalWalk;
 
     // 몸에 맞는 공
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '몸에 맞는 공'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '몸에맞는공'")
     private Double hitByPitch;
 
     // 타점
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '타점'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '타점'")
     private Double runsBattedIn;
 
     // 득점
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '타점'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '타점'")
     private Double runs;
 
     // 도루 횟수
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '도루'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '도루'")
     private double stolenBases;
 
     // 도루 시도 횟수
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '도루 시도'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '도루시도'")
     private double attempts;
 
     // 삼진
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '삼진'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '삼진'")
     private double strikeout;
 
     /**
@@ -119,19 +119,19 @@ public class HitterRecordEntity {
      */
 
     // 타율
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '타율'")
-    private Double BattingAverage;
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '타율'")
+    private Double battingAverage;
 
     // 장타율
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '장타율'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '장타율'")
     private Double sluggingPercentage;
 
     // 출루율
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '출루율'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '출루율'")
     private Double onBasePercentage;
 
     // 도루 성공률
-    @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '도루 성공율'")
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0 COMMENT '도루성공율'")
     private Double stolenBaseSuccessRate;
 
 
