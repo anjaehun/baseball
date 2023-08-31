@@ -1,4 +1,6 @@
 package com.example.baseball.teamMember.controller;
+import com.example.baseball.hitterRecord.HitterRecordEntity;
+import com.example.baseball.pitcherRecord.PitcherRecordEntity;
 import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.teamMember.TeamMemberEntity;
 import com.example.baseball.teamMember.exception.*;
@@ -10,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -55,6 +58,53 @@ public class TeamMemberController {
     }
 
     /**
+     * 특정 팀 조회
+     * @param teamId
+     * @return
+     */
+    @GetMapping("/list/{teamId}/all/team/members")
+    public ResponseEntity<List<TeamMemberEntity>> getTeamMemberById(@PathVariable int teamId) {
+        try {
+            List<TeamMemberEntity> teamMember = teamMemberService.getTeamMemberByIdService(teamId);
+            return ResponseEntity.ok(teamMember);
+        } catch (NoTeamByOneException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 특정 팀원의 타자 기록 조회
+     *
+     * @param teamMemberId
+     * @return
+     */
+    @GetMapping("/list/{teamMemberId}/hitter")
+    public ResponseEntity<List<HitterRecordEntity>> getHitterRecord(@PathVariable int teamMemberId ) {
+        try {
+            List<HitterRecordEntity> hitterRecord = teamMemberService.getHitterRecordByTeamMember(teamMemberId);
+            return ResponseEntity.ok(hitterRecord);
+        } catch (NoTeamByOneException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 특정 팀원의 투수 기록 조회
+     *
+     * @param teamMemberId
+     * @return
+     */
+    @GetMapping("/list/{teamMemberId}/pitcher")
+    public ResponseEntity<List<PitcherRecordEntity>> getPitcherRecord(@PathVariable int teamMemberId ) {
+        try {
+            List<PitcherRecordEntity> pitcherRecord = teamMemberService.getPitcherRecordByTeamMember(teamMemberId);
+            return ResponseEntity.ok(pitcherRecord);
+        } catch (NoTeamByOneException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      *  팀 멤버 승인
      * @param teamId
      * @param teamMemberId
@@ -86,6 +136,9 @@ public class TeamMemberController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+
+
 
 
 

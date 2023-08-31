@@ -19,7 +19,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,6 +42,8 @@ public class TeamMemberService {
         this.pitcherRecordRepository = pitcherRecordRepository;
         this.hitterRecordRepository = hitterRecordRepository;
     }
+
+
 
     /**
      * 회원 정보를 가져 오는 역활
@@ -149,7 +153,6 @@ public class TeamMemberService {
     return teamJoin;
     }
 
-
     public TeamMemberEntity updateApproval(int teamId, int teamMemberId) throws NoTeamByOneException, NotTeamMasterNicknameException, approvedTeamMemberException {
 
         // 닉네임
@@ -163,9 +166,9 @@ public class TeamMemberService {
         TeamMemberEntity teamMember =  teamMemberRepository.findById(teamMemberId)
                 .orElseThrow(() -> new NoTeamByOneException("팀멤버가 없습니다"));
 
-//        if(teamMember.getTeamFounderAcceptRole().equals(TeamFounderAcceptRole.TEAM_MEMBER_OK)){
-//            throw new approvedTeamMemberException("이미 팀 멤버입니다.");
-//        }
+        if(teamMember.getTeamFounderAcceptRole().equals(TeamFounderAcceptRole.TEAM_MEMBER_OK)){
+            throw new approvedTeamMemberException("이미 팀 멤버입니다.");
+        }
 
         if(!(nickname.equals(teamMasterNickname))){
             throw new NotTeamMasterNicknameException("팀 창설자만 승인을 할 수 있습니다. 다시 한번 확인해 주세요");
@@ -174,13 +177,13 @@ public class TeamMemberService {
         teamMember.setTeamFounderAcceptRole(TeamFounderAcceptRole.TEAM_MEMBER_OK);
         teamMemberRepository.save(teamMember);
 
-        // 승인에 성공 하면 팀 정식 일원으로 인정이 되며, 그에 따라 투수 기록과
-        // 타자 기록이 생성된다. 또한 기본 기록은 전부 0이며, 경기의 결과에 따라 업데이트 된다.
-
+//       승인에 성공 하면 팀 정식 일원으로 인정이 되며, 그에 따라 투수 기록과
+//       타자 기록이 생성된다. 또한 기본 기록은 전부 0이며, 경기의 결과에 따라 업데이트 된다.
         var pitcherRecord = PitcherRecordEntity.builder()
                 .teamName(team.getTeamName())
                 .name(teamMember.getName())
                 .nickname(teamMember.getNickname())
+                .atBat(0.0).hit(0.0).doubleHit(0.0).tripleHit(0.0).homeRun(0.0).strikeout(0.0).unintentionalWalk(0.0).intentionalWalk(0.0).runsAllowed(0.0).earnedRun(0.0).earnedRunAverage(0.0).whip(0.0).strikeoutPercent(0.0)
                 .team(team)
                 .teamMember(teamMember)
                 .build();
@@ -189,6 +192,7 @@ public class TeamMemberService {
                 .teamName(team.getTeamName())
                 .name(teamMember.getName())
                 .nickname(teamMember.getNickname())
+                .atBat(0.0).hit(0.0).doubleHit(0.0).tripleHit(0.0).homeRun(0.0).unintentionalWalk(0.0).intentionalWalk(0.0).hitByPitch(0.0).runsBattedIn(0.0).runs(0.0).stolenBases(0.0).attempts(0.0).strikeout(0.0).battingAverage(0.0).sluggingPercentage(0.0).onBasePercentage(0.0).stolenBaseSuccessRate(0.0)
                 .team(team)
                 .teamMember(teamMember)
                 .build();
@@ -197,6 +201,43 @@ public class TeamMemberService {
         hitterRecordRepository.save(hitterRecord);
 
         return teamMember;
+    }
 
+    // 조회
+    @Transactional
+    public List<TeamMemberEntity> getTeamMemberByIdService(int teamId) throws NoTeamByOneException {
+        TeamEntity team = teamRepository.findById(Math.toIntExact(teamId))
+                .orElseThrow(() -> new NoTeamByOneException("팀을 찾을수 없습니다."));
+
+        List<TeamMemberEntity> teamMember = teamMemberRepository.findByTeam(team);
+
+        return teamMember;
+    }
+
+    public List<HitterRecordEntity> getHitterRecordByTeamMember(int teamMemberId) throws NoTeamByOneException {
+        Optional<TeamMemberEntity> teamMemberOptional = teamMemberRepository.findById(teamMemberId);
+
+        if (teamMemberOptional.isEmpty()) {
+            throw new NoTeamByOneException("팀 멤버를 찾을 수 없습니다.");
+        }
+
+        TeamMemberEntity teamMember = teamMemberOptional.get();
+        List<HitterRecordEntity> hitterRecords = hitterRecordRepository.findByTeamMember(teamMember);
+
+        return hitterRecords;
+    }
+
+
+    public List<PitcherRecordEntity> getPitcherRecordByTeamMember(int teamMemberId) throws NoTeamByOneException {
+        Optional<TeamMemberEntity> teamMemberOptional = teamMemberRepository.findById(teamMemberId);
+
+        if (teamMemberOptional.isEmpty()) {
+            throw new NoTeamByOneException("팀 멤버를 찾을 수 없습니다.");
+        }
+
+        TeamMemberEntity teamMember = teamMemberOptional.get();
+        List<PitcherRecordEntity> pitcherRecords = pitcherRecordRepository.findByTeamMember(teamMember);
+
+        return pitcherRecords;
     }
 }
