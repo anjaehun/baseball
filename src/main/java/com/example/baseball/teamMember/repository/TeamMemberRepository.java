@@ -5,6 +5,7 @@ import com.example.baseball.teamMember.TeamMemberEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TeamMemberRepository extends JpaRepository<TeamMemberEntity, Integer> {
 
@@ -13,4 +14,6 @@ public interface TeamMemberRepository extends JpaRepository<TeamMemberEntity, In
     boolean existsByTeamAndNameAndNickname(TeamEntity team, String name, String nickname);
 
     List<TeamMemberEntity> findByTeam(TeamEntity team);
+
+    Optional<Object> findByNickname(String nickname);
 }

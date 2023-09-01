@@ -1,10 +1,19 @@
 package com.example.baseball.team.service;
 
+import com.example.baseball.hitterRecord.HitterRecordEntity;
+import com.example.baseball.hitterRecord.repository.HitterRecordRepository;
+import com.example.baseball.pitcherRecord.PitcherRecordEntity;
+import com.example.baseball.pitcherRecord.repository.PitcherRecordRepository;
 import com.example.baseball.team.Request.TeamPostRequest;
 import com.example.baseball.team.entity.TeamEntity;
 import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.team.exception.SameTeamNameException;
 import com.example.baseball.team.repository.TeamRepository;
+import com.example.baseball.teamMember.TeamMemberEntity;
+import com.example.baseball.teamMember.enumType.TeamFounderAcceptRole;
+import com.example.baseball.teamMember.repository.TeamMemberRepository;
+import com.example.baseball.teamPerformance.TeamPerformanceEntity;
+import com.example.baseball.teamPerformance.repository.TeamPerformanceRepository;
 import com.example.baseball.user.entity.UserEntity;
 import com.example.baseball.user.repository.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -20,11 +29,23 @@ import java.util.Optional;
 public class TeamService {
 
     private final UserRepository userRepository;
-    private final TeamRepository teamRepository ;
+    private final TeamRepository teamRepository;
+    private final TeamMemberRepository teamMemberRepository ;
+    private final PitcherRecordRepository pitcherRecordRepository;
 
-    public TeamService(UserRepository userRepository, TeamRepository teamRepository) {
+    private final HitterRecordRepository hitterRecordRepository;
+
+    private final TeamPerformanceRepository teamPerformanceRepository;
+
+
+
+    public TeamService(UserRepository userRepository, TeamRepository teamRepository, TeamMemberRepository teamMemberRepository, PitcherRecordRepository pitcherRecordRepository, HitterRecordRepository hitterRecordRepository, TeamPerformanceRepository teamPerformanceRepository) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
+        this.teamMemberRepository = teamMemberRepository;
+        this.pitcherRecordRepository = pitcherRecordRepository;
+        this.hitterRecordRepository = hitterRecordRepository;
+        this.teamPerformanceRepository = teamPerformanceRepository;
     }
 
     /**
@@ -82,7 +103,7 @@ public class TeamService {
 
         return name;
     }
-    public TeamEntity postTeam(TeamPostRequest request) throws SameTeamNameException {
+    public TeamEntity postTeam(TeamPostRequest request) throws SameTeamNameException, NoTeamByOneException {
 
         String name = username();
         String nickname = userNickname();
@@ -120,6 +141,61 @@ public class TeamService {
               .build();
 
         teamRepository.save(team);
+
+        // 창설자 팀 멤버 등록
+
+        // teamName -> 예외처리로 인해 중복된 팀 네임은 해결 될 수 있음
+        TeamEntity findByTeamName = teamRepository.findByTeamName(request.getTeamName())
+                .orElseThrow(() -> new NoTeamByOneException("팀정보가 없습니다"));
+
+        var teamPerfomance = TeamPerformanceEntity.builder()
+                .team(findByTeamName)
+                .win(0.0)
+                .lose(0.0)
+                .winRate(0.0)
+                .build();
+
+        teamPerformanceRepository.save(teamPerfomance);
+
+        var teamMember = TeamMemberEntity.builder()
+                .name(name)
+                .nickname(nickname)
+                // TEAM_MEMBER_OK => 창설자는 따로 인증절차를 걸치지 않고 등록이 가능하다
+                .teamFounderAcceptRole(TeamFounderAcceptRole.TEAM_MEMBER_OK)
+                .jerseyNumber(request.getJerseyNumber())
+                .height(request.getHeight())
+                .weight(request.getWeight())
+                .reasonForTeamMembership(request.getReasonForTeamMembership())
+                .determinationForTheFuture(request.getDeterminationForTheFuture())
+                .registerDt(currentTime)
+                .team(findByTeamName)
+                .build();
+
+        teamMemberRepository.save(teamMember);
+
+        TeamMemberEntity teamMemberByNickname = (TeamMemberEntity) teamMemberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new NoTeamByOneException("팀멤버가 없습니다"));
+
+        var pitcherRecord = PitcherRecordEntity.builder()
+                .teamName(team.getTeamName())
+                .name(teamMemberByNickname.getName())
+                .nickname(teamMemberByNickname.getNickname())
+                .atBat(0.0).hit(0.0).doubleHit(0.0).tripleHit(0.0).homeRun(0.0).strikeout(0.0).unintentionalWalk(0.0).intentionalWalk(0.0).runsAllowed(0.0).earnedRun(0.0).earnedRunAverage(0.0).whip(0.0).strikeoutPercent(0.0)
+                .team(team)
+                .teamMember(teamMemberByNickname)
+                .build();
+
+        var hitterRecord = HitterRecordEntity.builder()
+                .teamName(team.getTeamName())
+                .name(teamMemberByNickname.getName())
+                .nickname(teamMemberByNickname.getNickname())
+                .atBat(0.0).hit(0.0).doubleHit(0.0).tripleHit(0.0).homeRun(0.0).unintentionalWalk(0.0).intentionalWalk(0.0).hitByPitch(0.0).runsBattedIn(0.0).runs(0.0).stolenBases(0.0).attempts(0.0).strikeout(0.0).battingAverage(0.0).sluggingPercentage(0.0).onBasePercentage(0.0).stolenBaseSuccessRate(0.0)
+                .team(team)
+                .teamMember(teamMemberByNickname)
+                .build();
+
+        pitcherRecordRepository.save(pitcherRecord);
+        hitterRecordRepository.save(hitterRecord);
 
         return team;
     }

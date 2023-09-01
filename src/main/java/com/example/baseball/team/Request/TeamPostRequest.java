@@ -16,4 +16,12 @@ public class TeamPostRequest {
     private String mainCoach;
     private String teamDescription;
     private String teamImg;
+
+    // 생성자가 필요한 자료
+    private int jerseyNumber;
+    private int height;
+    private int weight;
+    private String reasonForTeamMembership;
+    private String determinationForTheFuture;
+
 }

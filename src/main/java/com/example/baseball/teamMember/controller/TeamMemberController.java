@@ -5,6 +5,7 @@ import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.teamMember.TeamMemberEntity;
 import com.example.baseball.teamMember.exception.*;
 import com.example.baseball.teamMember.request.TeamMemberApplicationRequest;
+import com.example.baseball.teamMember.request.TeamMemberCreaterApplicationRequest;
 import com.example.baseball.teamMember.service.TeamMemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,6 @@ public class TeamMemberController {
     /**
      * 팀 멤버 아이디를 찾고 팀 등록을 한다.
      * @param teamId
-     * @param request
      * @return
      */
     @PostMapping("/{teamId}/membership/application")
@@ -56,6 +56,7 @@ public class TeamMemberController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
 
     /**
      * 특정 팀 조회
