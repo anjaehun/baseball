@@ -1,6 +1,6 @@
 package com.example.baseball.teamPerformance;
 
-import com.example.baseball.team.TeamEntity;
+import com.example.baseball.team.entity.TeamEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "teamPerformance")
-public class teamPerformanceEntity {
+public class TeamPerformanceEntity {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)

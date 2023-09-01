@@ -1,7 +1,8 @@
 package com.example.baseball.teamMember;
 
-import com.example.baseball.team.TeamEntity;
-import com.example.baseball.teamMember.enumType.ManagerAcceptRole;
+import com.example.baseball.team.entity.TeamEntity;
+
+import com.example.baseball.teamMember.enumType.TeamFounderAcceptRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class TeamMemberEntity {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
-    private Long teamMemberId;
+    private Integer teamMemberId;
 
     @ManyToOne
     @JoinColumn(name = "team_id")
@@ -35,8 +36,8 @@ public class TeamMemberEntity {
     @Column(columnDefinition = "VARCHAR(255) COMMENT '선수 닉네임'")
     private String nickname;
 
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '감독 승인 여부'")
-    private ManagerAcceptRole managerAcceptRole;
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '팀 생성자 승인 여부'")
+    private TeamFounderAcceptRole teamFounderAcceptRole;
 
     // 등 번호
     @Column(columnDefinition = "DOUBLE DEFAULT 0 COMMENT '등번호'")
@@ -53,6 +54,15 @@ public class TeamMemberEntity {
     // 팀에서의 역활
     @Column(columnDefinition = "VARCHAR(255) DEFAULT 0 COMMENT '팀 역활'")
     private Integer teamRole;
+
+    // 팀 가입 이유
+    @Column(columnDefinition = "TEXT DEFAULT 0 COMMENT '팀 가입 이유'")
+    private String reasonForTeamMembership;
+
+    // 앞으로의 각오
+    @Column(columnDefinition = "TEXT DEFAULT 0 COMMENT '앞으로의 각오'")
+    private String determinationForTheFuture;
+
 
 
     private LocalDateTime registerDt;

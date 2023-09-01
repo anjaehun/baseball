@@ -1,23 +1,16 @@
-package com.example.baseball.team.Request;
+package com.example.baseball.teamMember.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TeamPostRequest {
-    private String teamName;
-    private String mainCoach;
-    private String teamDescription;
-    private String teamImg;
+public class TeamMemberCreaterApplicationRequest {
 
-    // 생성자가 필요한 자료
     private int jerseyNumber;
     private int height;
     private int weight;

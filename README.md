@@ -134,15 +134,8 @@ aws RDS(Database) 사용해보기
 --------------------------------------
 erd
 --------------------------------------
-![야구_erd_ver0 2](https://github.com/anjaehun/baseball/assets/77096665/74eaf2f1-6c11-448b-b428-cc4c3d6a5da0)
 
---------------------------------------
-사용 기술 스택
---------------------------------------
--jpa 
--spring boot
--aws ec2 
--rds 
+![image](https://github.com/anjaehun/baseball/assets/77096665/d89d4674-ec5b-4a07-87f4-b241a3fa8196)
 
 
   
