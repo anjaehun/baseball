@@ -88,7 +88,7 @@ public class AuthenticationService {
      * @param request
      * @return
      */
-    public AuthenticationResponse partnerRegister(PartnerRequest request) {
+    public AuthenticationResponse stadiumRegister(PartnerRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
         String nickname = request.getNickname();
@@ -121,7 +121,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .nickname(nickname)
-                .role(Role.PARTNER_USER)
+                .role(Role.STADIUM_USER)
                 .registerDt(currentTime)
                 .build();
         repository.save(user);

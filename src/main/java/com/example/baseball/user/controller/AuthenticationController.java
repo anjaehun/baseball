@@ -44,10 +44,10 @@ public class AuthenticationController {
      * @param request
      * @return
      */
-    @PostMapping("/register/partner")
+    @PostMapping("/register/stadiumUser")
     public ResponseEntity<?> register(@RequestBody PartnerRequest request) {
         try {
-            AuthenticationResponse response = service.partnerRegister(request);
+            AuthenticationResponse response = service.stadiumRegister(request);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
