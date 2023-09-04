@@ -12,10 +12,11 @@ public class TeamPostRequest {
     private String teamName;
     private String mainCoach;
     private String teamDescription;
-    private String teamImg; // "teamImage" 필드 대신 "teamImg"로 변경
+    private String teamImg;
     private Integer jerseyNumber;
     private Integer height;
     private Integer weight;
+    private String teamLogoImage;
     private String reasonForTeamMembership;
     private String determinationForTheFuture;
 

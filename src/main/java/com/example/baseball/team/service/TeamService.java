@@ -13,6 +13,7 @@ import com.example.baseball.team.response.TeamListShowByTeamIdResponse;
 import com.example.baseball.team.response.TeamListShowResponse;
 import com.example.baseball.teamMember.entity.TeamMemberEntity;
 import com.example.baseball.teamMember.enumType.TeamFounderAcceptRole;
+import com.example.baseball.teamMember.enumType.TeamRoleEnumType;
 import com.example.baseball.teamMember.repository.TeamMemberRepository;
 import com.example.baseball.teamPerformance.TeamPerformanceEntity;
 import com.example.baseball.teamPerformance.repository.TeamPerformanceRepository;
@@ -144,6 +145,8 @@ public class TeamService {
                 .masterName(name)
                 .masterNickname(nickname)
                 .teamName(teamName)
+                .teamDescription(request.getTeamDescription())
+                .teamLogoImage(request.getTeamLogoImage())
                 .mainCoach(mainCoach)
                 .teamImg(request.getTeamImg())
                 .registerDt(currentTime)
@@ -175,6 +178,7 @@ public class TeamService {
                 .jerseyNumber(request.getJerseyNumber())
                 .height(request.getHeight())
                 .weight(request.getWeight())
+                .teamRole(TeamRoleEnumType.TEAM_CREATER)
                 .reasonForTeamMembership(request.getReasonForTeamMembership())
                 .determinationForTheFuture(request.getDeterminationForTheFuture())
                 .registerDt(currentTime)
@@ -234,7 +238,7 @@ public class TeamService {
         Optional<TeamEntity> optionalTeam = teamRepository.findById(teamId);
 
         if(!(optionalTeam.isPresent())){
-            throw new NoTeamByOneException("팀 정보가 없습니다. ");
+            throw new NoTeamByOneException("팀 정보가 없습니다.");
         }
 
         TeamListShowByTeamIdResponse response =
@@ -246,16 +250,7 @@ public class TeamService {
                         .teamLogoImage(optionalTeam.get().getTeamLogoImage())
                         .teamImg(optionalTeam.get().getTeamImg())
                         .build();
-
-
-
             return response;
-
     }
-
-
-
-
-
 
 }
