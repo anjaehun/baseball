@@ -7,7 +7,7 @@ import com.example.baseball.pitcherRecord.repository.PitcherRecordRepository;
 import com.example.baseball.team.entity.TeamEntity;
 import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.team.repository.TeamRepository;
-import com.example.baseball.teamMember.TeamMemberEntity;
+import com.example.baseball.teamMember.entity.TeamMemberEntity;
 import com.example.baseball.teamMember.enumType.TeamFounderAcceptRole;
 import com.example.baseball.teamMember.exception.*;
 import com.example.baseball.teamMember.repository.TeamMemberRepository;

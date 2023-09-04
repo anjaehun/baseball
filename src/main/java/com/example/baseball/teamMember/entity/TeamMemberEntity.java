@@ -1,4 +1,4 @@
-package com.example.baseball.teamMember;
+package com.example.baseball.teamMember.entity;
 
 import com.example.baseball.team.entity.TeamEntity;
 
