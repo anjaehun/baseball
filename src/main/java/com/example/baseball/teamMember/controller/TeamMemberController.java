@@ -36,10 +36,9 @@ public class TeamMemberController {
             @PathVariable int teamId,
             @RequestBody TeamMemberApplicationRequest request){
         try {
-            TeamMemberEntity teamMemberEntity = teamMemberService.membershipApplication(teamId, request);
+            teamMemberService.membershipApplication(teamId, request);
             Map<String, Object> response = new HashMap<>();
             response.put("등록 성공하였습니다!", "Success");
-            response.put("팀 정보 : ", teamMemberEntity);
             return ResponseEntity.ok(response);
         } catch (NoTeamByOneException e) {
             Map<String, String> response = new HashMap<>();

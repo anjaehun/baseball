@@ -4,7 +4,10 @@ import com.example.baseball.team.Request.TeamPostRequest;
 import com.example.baseball.team.entity.TeamEntity;
 import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.team.exception.SameTeamNameException;
+import com.example.baseball.team.response.TeamListShowByTeamIdResponse;
+import com.example.baseball.team.response.TeamListShowResponse;
 import com.example.baseball.team.service.TeamService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,19 +40,21 @@ public class TeamController {
             Map<String, String> response = new HashMap<>();
             response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<TeamEntity>> getAllTeams() {
-        List<TeamEntity> teamList = teamService.getAllTeamList();
+    public ResponseEntity<List<TeamListShowResponse>> getAllTeams() {
+        List<TeamListShowResponse> teamList = teamService.getAllTeamList();
         return ResponseEntity.ok(teamList);
     }
 
     @GetMapping("/list/{teamId}")
     public ResponseEntity<Object> getTeamById(@PathVariable Integer teamId) {
         try {
-            TeamEntity team = teamService.getTeamByTeamId(teamId);
+            TeamListShowByTeamIdResponse team = teamService.getTeamByTeamId(teamId);
             return ResponseEntity.ok(team);
         } catch (NoTeamByOneException e) {
             Map<String, String> response = new HashMap<>();
