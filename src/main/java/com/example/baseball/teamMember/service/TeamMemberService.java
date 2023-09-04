@@ -9,12 +9,17 @@ import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.team.repository.TeamRepository;
 import com.example.baseball.teamMember.entity.TeamMemberEntity;
 import com.example.baseball.teamMember.enumType.TeamFounderAcceptRole;
+import com.example.baseball.teamMember.enumType.TeamRoleEnumType;
 import com.example.baseball.teamMember.exception.*;
 import com.example.baseball.teamMember.repository.TeamMemberRepository;
 import com.example.baseball.teamMember.request.TeamMemberApplicationRequest;
 import com.example.baseball.teamMember.request.TeamMemberCreaterApplicationRequest;
+import com.example.baseball.teamMember.response.TeamHitterGetRequest;
+import com.example.baseball.teamMember.response.TeamMemberGetRequest;
+import com.example.baseball.teamMember.response.TeamPitcherGetRequest;
 import com.example.baseball.user.entity.UserEntity;
 import com.example.baseball.user.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,12 +42,15 @@ public class TeamMemberService {
 
     private final HitterRecordRepository hitterRecordRepository;
 
-    public TeamMemberService(UserRepository userRepository, TeamRepository teamRepository, TeamMemberRepository teamMemberRepository, PitcherRecordRepository pitcherRecordRepository, HitterRecordRepository hitterRecordRepository) {
+    private final ModelMapper modelMapper;
+
+    public TeamMemberService(UserRepository userRepository, TeamRepository teamRepository, TeamMemberRepository teamMemberRepository, PitcherRecordRepository pitcherRecordRepository, HitterRecordRepository hitterRecordRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.teamMemberRepository = teamMemberRepository;
         this.pitcherRecordRepository = pitcherRecordRepository;
         this.hitterRecordRepository = hitterRecordRepository;
+        this.modelMapper = modelMapper;
     }
 
 
@@ -140,6 +149,7 @@ public class TeamMemberService {
                 .nickname(nickname)
                 // WAITING_FOR_APPROVAL => 팀 창설자의 승인 대기
                 .teamFounderAcceptRole(TeamFounderAcceptRole.WAITING_FOR_APPROVAL)
+                .teamRole(TeamRoleEnumType.TEAM_MEMBER)
                 .jerseyNumber(jerseyNumber)
                 .height(request.getHeight())
                 .weight(request.getWeight())
@@ -259,16 +269,35 @@ public class TeamMemberService {
 
     // 조회
     @Transactional
-    public List<TeamMemberEntity> getTeamMemberByIdService(int teamId) throws NoTeamByOneException {
+    public List<TeamMemberGetRequest> getTeamMemberByIdService(int teamId) throws NoTeamByOneException {
         TeamEntity team = teamRepository.findById(Math.toIntExact(teamId))
                 .orElseThrow(() -> new NoTeamByOneException("팀을 찾을수 없습니다."));
 
-        List<TeamMemberEntity> teamMember = teamMemberRepository.findByTeam(team);
+        List<TeamMemberEntity> teamMembers = teamMemberRepository.findByTeam(team);
 
-        return teamMember;
+        List<TeamMemberGetRequest> teamMemberGetResponse = new ArrayList<>();
+
+        for(TeamMemberEntity teamMemberGet: teamMembers){
+            TeamMemberGetRequest response = new TeamMemberGetRequest();
+            response.setTeamId(teamId);
+            response.setTeamMemberId(teamMemberGet.getTeamMemberId());
+            response.setTeamName(team.getTeamName());
+            response.setName(teamMemberGet.getName());
+            response.setJerseyNumber(teamMemberGet.getJerseyNumber());
+            response.setTeamRole(teamMemberGet.getTeamRole());
+            response.setRegisterDt(teamMemberGet.getRegisterDt());
+            response.setReasonForTeamMembership(teamMemberGet.getReasonForTeamMembership());
+            response.setDeterminationForTheFuture(teamMemberGet.getDeterminationForTheFuture());
+            teamMemberGetResponse.add(response);
+        }
+
+
+
+        return teamMemberGetResponse;
     }
 
-    public List<HitterRecordEntity> getHitterRecordByTeamMember(int teamMemberId) throws NoTeamByOneException {
+    @Transactional
+    public TeamHitterGetRequest getHitterRecordsByTeamMember(int teamMemberId) throws NoTeamByOneException {
         Optional<TeamMemberEntity> teamMemberOptional = teamMemberRepository.findById(teamMemberId);
 
         if (teamMemberOptional.isEmpty()) {
@@ -276,13 +305,28 @@ public class TeamMemberService {
         }
 
         TeamMemberEntity teamMember = teamMemberOptional.get();
-        List<HitterRecordEntity> hitterRecords = hitterRecordRepository.findByTeamMember(teamMember);
+        Optional<HitterRecordEntity> hitterRecordOptional = hitterRecordRepository.findByTeamMember(teamMember);
 
-        return hitterRecords;
+        if (hitterRecordOptional.isEmpty()) {
+            throw new NoTeamByOneException("팀 멤버의 타자 기록을 찾을 수 없습니다.");
+        }
+
+        HitterRecordEntity hitterRecord = hitterRecordOptional.get();
+        TeamHitterGetRequest hitterRequest = new TeamHitterGetRequest();
+        // 타자 기록 (한줄로 하는 것이 더 깔끔하다 판단함)
+        hitterRequest.setAtBat(hitterRecord.getAtBat());hitterRequest.setHit(hitterRecord.getHit());hitterRequest.setDoubleHit(hitterRecord.getDoubleHit());hitterRequest.setTripleHit(hitterRecord.getTripleHit());hitterRequest.setHomeRun(hitterRecord.getHomeRun());hitterRequest.setUnintentionalWalk(hitterRecord.getUnintentionalWalk());hitterRequest.setIntentionalWalk(hitterRecord.getIntentionalWalk());hitterRequest.setHitByPitch(hitterRecord.getHitByPitch());hitterRequest.setRunsBattedIn(hitterRecord.getRunsBattedIn());hitterRequest.setRuns(hitterRecord.getRuns());hitterRequest.setStolenBases(hitterRecord.getStolenBases());hitterRequest.setAttempts(hitterRecord.getAttempts());hitterRequest.setStrikeout(hitterRecord.getStrikeout());hitterRequest.setBattingAverage(hitterRecord.getBattingAverage());hitterRequest.setSluggingPercentage(hitterRecord.getSluggingPercentage());hitterRequest.setOnBasePercentage(hitterRecord.getOnBasePercentage());hitterRequest.setStolenBaseSuccessRate(hitterRecord.getStolenBaseSuccessRate());
+
+        hitterRequest.setName(teamMember.getName());
+        hitterRequest.setTeamName(teamMember.getTeam().getTeamName());
+        hitterRequest.setJerseyNumber(teamMember.getJerseyNumber());
+
+        return hitterRequest;
     }
 
 
-    public List<PitcherRecordEntity> getPitcherRecordByTeamMember(int teamMemberId) throws NoTeamByOneException {
+
+    public TeamPitcherGetRequest getPitcherRecordByTeamMember(int teamMemberId) throws NoTeamByOneException {
+
         Optional<TeamMemberEntity> teamMemberOptional = teamMemberRepository.findById(teamMemberId);
 
         if (teamMemberOptional.isEmpty()) {
@@ -290,9 +334,23 @@ public class TeamMemberService {
         }
 
         TeamMemberEntity teamMember = teamMemberOptional.get();
-        List<PitcherRecordEntity> pitcherRecords = pitcherRecordRepository.findByTeamMember(teamMember);
+        Optional<PitcherRecordEntity> pitcherRecordOptional = pitcherRecordRepository.findByTeamMember(teamMember);
 
-        return pitcherRecords;
+        if (pitcherRecordOptional.isEmpty()) {
+            throw new NoTeamByOneException("팀 멤버의 타자 기록을 찾을 수 없습니다.");
+        }
+
+        PitcherRecordEntity pitcherRecord = pitcherRecordOptional.get();
+        TeamPitcherGetRequest pitcherResponse = new TeamPitcherGetRequest();
+        // 투수 기록 (한줄로 하는 것이 더 깔끔하다 판단함)
+        pitcherResponse.setAtBat(pitcherRecord.getAtBat());pitcherResponse.setHit(pitcherRecord.getHit());pitcherResponse.setDoubleHit(pitcherRecord.getDoubleHit());pitcherResponse.setTripleHit(pitcherRecord.getTripleHit());pitcherResponse.setHomeRun(pitcherRecord.getHomeRun());pitcherResponse.setStrikeout(pitcherRecord.getStrikeout());pitcherResponse.setUnintentionalWalk(pitcherRecord.getUnintentionalWalk());pitcherResponse.setIntentionalWalk(pitcherRecord.getIntentionalWalk());pitcherResponse.setRunsAllowed(pitcherRecord.getRunsAllowed());pitcherResponse.setEarnedRun(pitcherRecord.getEarnedRun());pitcherResponse.setEarnedRunAverage(pitcherRecord.getEarnedRunAverage());pitcherResponse.setWhip(pitcherRecord.getWhip());pitcherResponse.setStrikeoutPercent(pitcherRecord.getStrikeoutPercent());
+
+        // 추가 컬럼
+        pitcherResponse.setName(teamMember.getName());
+        pitcherResponse.setTeamName(teamMember.getTeam().getTeamName());
+        pitcherResponse.setJerseyNumber(teamMember.getJerseyNumber());
+
+        return pitcherResponse;
     }
 
 

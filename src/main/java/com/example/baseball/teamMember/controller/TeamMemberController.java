@@ -5,6 +5,9 @@ import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.teamMember.entity.TeamMemberEntity;
 import com.example.baseball.teamMember.exception.*;
 import com.example.baseball.teamMember.request.TeamMemberApplicationRequest;
+import com.example.baseball.teamMember.response.TeamHitterGetRequest;
+import com.example.baseball.teamMember.response.TeamMemberGetRequest;
+import com.example.baseball.teamMember.response.TeamPitcherGetRequest;
 import com.example.baseball.teamMember.service.TeamMemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,9 +65,9 @@ public class TeamMemberController {
      * @return
      */
     @GetMapping("/list/{teamId}/all/team/members")
-    public ResponseEntity<List<TeamMemberEntity>> getTeamMemberById(@PathVariable int teamId) {
+    public ResponseEntity<List<TeamMemberGetRequest>> getTeamMemberById(@PathVariable int teamId) {
         try {
-            List<TeamMemberEntity> teamMember = teamMemberService.getTeamMemberByIdService(teamId);
+            List<TeamMemberGetRequest> teamMember = teamMemberService.getTeamMemberByIdService(teamId);
             return ResponseEntity.ok(teamMember);
         } catch (NoTeamByOneException e) {
             throw new RuntimeException(e);
@@ -78,9 +81,9 @@ public class TeamMemberController {
      * @return
      */
     @GetMapping("/list/{teamMemberId}/hitter")
-    public ResponseEntity<List<HitterRecordEntity>> getHitterRecord(@PathVariable int teamMemberId ) {
+    public ResponseEntity<TeamHitterGetRequest> getHitterRecord(@PathVariable int teamMemberId ) {
         try {
-            List<HitterRecordEntity> hitterRecord = teamMemberService.getHitterRecordByTeamMember(teamMemberId);
+            TeamHitterGetRequest hitterRecord = teamMemberService.getHitterRecordsByTeamMember(teamMemberId);
             return ResponseEntity.ok(hitterRecord);
         } catch (NoTeamByOneException e) {
             throw new RuntimeException(e);
@@ -94,9 +97,9 @@ public class TeamMemberController {
      * @return
      */
     @GetMapping("/list/{teamMemberId}/pitcher")
-    public ResponseEntity<List<PitcherRecordEntity>> getPitcherRecord(@PathVariable int teamMemberId ) {
+    public ResponseEntity<TeamPitcherGetRequest> getPitcherRecord(@PathVariable int teamMemberId ) {
         try {
-            List<PitcherRecordEntity> pitcherRecord = teamMemberService.getPitcherRecordByTeamMember(teamMemberId);
+            TeamPitcherGetRequest pitcherRecord = teamMemberService.getPitcherRecordByTeamMember(teamMemberId);
             return ResponseEntity.ok(pitcherRecord);
         } catch (NoTeamByOneException e) {
             throw new RuntimeException(e);
