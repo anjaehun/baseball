@@ -6,8 +6,10 @@ import com.example.baseball.team.repository.TeamRepository;
 import com.example.baseball.teamBoard.entity.TeamBoardEntity;
 import com.example.baseball.teamBoard.enumType.BoardCategoryEnum;
 import com.example.baseball.teamBoard.exception.NoBoardByOneException;
+import com.example.baseball.teamBoard.exception.NotTheAuthorOfThePostException;
 import com.example.baseball.teamBoard.repository.TeamBoardRepository;
 import com.example.baseball.teamBoard.request.BoardRequest;
+import com.example.baseball.teamBoard.request.BoardUpdateRequest;
 import com.example.baseball.teamMember.entity.TeamMemberEntity;
 import com.example.baseball.teamMember.repository.TeamMemberRepository;
 import com.example.baseball.user.entity.UserEntity;
@@ -171,5 +173,65 @@ public class TeamBoardService {
         Optional<TeamBoardEntity> board = teamBoardRepository.findByTeamAndTeamBoardId(team, boardId);
 
         return board.orElseThrow(() -> new NoBoardByOneException("게시글을 찾을 수 없습니다"));
+    }
+
+
+    public TeamBoardEntity updateTeamBoard(Long teamId, Integer boardId, BoardUpdateRequest boardUpdateRequest) throws NotTheAuthorOfThePostException, NoBoardByOneException, NoTeamByOneException {
+        String nickname = userNickname();
+
+
+        TeamEntity team = teamRepository.findById(Math.toIntExact(teamId))
+                .orElseThrow(() -> new NoTeamByOneException("팀 정보가 없습니다"));
+
+        Optional<TeamBoardEntity> boardOptional = teamBoardRepository.findByTeamAndTeamBoardId(team, boardId);
+
+        TeamBoardEntity board = boardOptional.orElseThrow(() -> new NoBoardByOneException("게시글을 찾을 수 없습니다"));
+
+        System.out.println("board.getTeamMemberNickname() = " + board.getTeamMemberNickname());
+
+        System.out.println("nickname = " + nickname);
+
+        if(!(nickname.equals(board.getTeamMemberNickname()))) {
+            throw new NotTheAuthorOfThePostException("게시글작성자가 아닙니다.");
+        }
+
+
+            int noticeOrContent = boardUpdateRequest.getNoticeOrContent();
+            String noticeOrContentFin = String.valueOf(BoardCategoryEnum.GENERAL);
+
+            if(noticeOrContent == 1){
+                noticeOrContentFin = String.valueOf(BoardCategoryEnum.NOTICE);
+            }
+
+            // 업데이트할 내용 적용
+            board.setTeamPostCategory(BoardCategoryEnum.valueOf(noticeOrContentFin));
+            board.setBoardTitle(boardUpdateRequest.getTeamBoardTitle());
+            board.setBoardContent(boardUpdateRequest.getTeamBoardContent());
+            board.setModificationDate(LocalDateTime.now());
+
+            return teamBoardRepository.save(board);
+    }
+
+    public void deleteTeamBoardById(Long teamId, Integer boardId) throws NoTeamByOneException, NoBoardByOneException, NotTheAuthorOfThePostException {
+        String nickname = userNickname();
+        TeamEntity team = teamRepository.findById(Math.toIntExact(teamId))
+                .orElseThrow(() -> new NoTeamByOneException("팀 정보가 없습니다"));
+
+        Optional<TeamBoardEntity> boardOptional = teamBoardRepository.findByTeamAndTeamBoardId(team, boardId);
+
+        if (boardOptional.isPresent()) {
+            TeamBoardEntity board = boardOptional.get();
+            if(!(nickname.equals(board.getTeamMemberNickname()))){
+                throw new NotTheAuthorOfThePostException("게시글작성자가 아닙니다.");
+            }
+
+
+            // 삭제 로직을 수행합니다.
+            teamBoardRepository.delete(board);
+        } else {
+            throw new NoBoardByOneException("게시글을 찾을 수 없습니다");
+        }
+
+
     }
 }

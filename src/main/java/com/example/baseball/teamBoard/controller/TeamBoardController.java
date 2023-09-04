@@ -3,7 +3,9 @@ package com.example.baseball.teamBoard.controller;
 import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.teamBoard.entity.TeamBoardEntity;
 import com.example.baseball.teamBoard.exception.NoBoardByOneException;
+import com.example.baseball.teamBoard.exception.NotTheAuthorOfThePostException;
 import com.example.baseball.teamBoard.request.BoardRequest;
+import com.example.baseball.teamBoard.request.BoardUpdateRequest;
 import com.example.baseball.teamBoard.service.TeamBoardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -105,4 +107,54 @@ public class TeamBoardController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    @PutMapping("/team/{teamId}/boards/{boardId}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Object> updateTeamBoard(
+            @PathVariable Long teamId,
+            @PathVariable Integer boardId,
+            @RequestBody BoardUpdateRequest boardUpdateRequest
+    ) {
+        try {
+            TeamBoardEntity updatedBoard = teamBoardService.updateTeamBoard(teamId, boardId, boardUpdateRequest);
+            return new ResponseEntity<>(updatedBoard, HttpStatus.OK);
+        } catch (NoBoardByOneException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (NotTheAuthorOfThePostException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (NoTeamByOneException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @DeleteMapping("/team/{teamId}/boards/{boardId}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<String> deleteTeamBoard(
+            @PathVariable Long teamId,
+            @PathVariable Integer boardId
+    ) {
+        try {
+            teamBoardService.deleteTeamBoardById(teamId, boardId);
+            return new ResponseEntity<>("게시글이 삭제되었습니다.", HttpStatus.OK);
+        } catch (NoTeamByOneException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
+        } catch (NoBoardByOneException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
+        } catch (NotTheAuthorOfThePostException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
+        }
+    }
+
 }
