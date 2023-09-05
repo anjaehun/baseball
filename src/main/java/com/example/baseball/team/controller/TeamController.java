@@ -1,6 +1,6 @@
 package com.example.baseball.team.controller;
 
-import com.example.baseball.team.Request.TeamPostRequest;
+import com.example.baseball.team.Request.TeamPostRequestPart;
 import com.example.baseball.team.entity.TeamEntity;
 import com.example.baseball.team.exception.NoTeamByOneException;
 import com.example.baseball.team.exception.SameTeamNameException;
@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +30,11 @@ public class TeamController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Object> createTeam(@RequestBody TeamPostRequest request) {
+    public ResponseEntity<Object> createTeam(@RequestPart TeamPostRequestPart request,
+                                             @RequestPart("fileByTeamImg") MultipartFile fileByTeamImg,
+                                             @RequestPart("fileByTeamLoge") MultipartFile fileByTeamLoge) {
         try {
-            TeamEntity createdTeam = teamService.postTeam(request);
+            TeamEntity createdTeam = teamService.postTeam(request, fileByTeamImg,fileByTeamLoge);
             return new ResponseEntity<>(createdTeam, HttpStatus.CREATED);
         } catch (SameTeamNameException e) {
             Map<String, String> response = new HashMap<>();
@@ -44,6 +48,7 @@ public class TeamController {
             throw new RuntimeException(e);
         }
     }
+
 
     @GetMapping("/list")
     public ResponseEntity<List<TeamListShowResponse>> getAllTeams() {

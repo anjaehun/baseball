@@ -42,7 +42,7 @@ public class TeamEntity {
     @Column(columnDefinition = "VARCHAR(255) COMMENT '팀로고'")
     private String teamLogoImage;
 
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '팀이미지'")
+    @Column(columnDefinition = "VARCHAR(1000) COMMENT '팀이미지'")
     private String teamImg;
 
 

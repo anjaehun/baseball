@@ -1,14 +1,15 @@
 package com.example.baseball.team.Request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import lombok.Data;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 import java.time.LocalDateTime;
 
 @Data
-public class TeamPostRequest {
+public class TeamPostRequestPart {
     private String teamName;
     private String mainCoach;
     private String teamDescription;
