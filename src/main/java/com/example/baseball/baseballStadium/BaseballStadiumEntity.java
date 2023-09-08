@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 @Table(name = "baseballStadium")
 public class BaseballStadiumEntity {
 
-
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
     private Integer baseballStadiumReservationId;
