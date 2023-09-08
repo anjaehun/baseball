@@ -1,8 +1,9 @@
-package com.example.baseball.teamMember;
+package com.example.baseball.teamMember.entity;
 
 import com.example.baseball.team.entity.TeamEntity;
 
 import com.example.baseball.teamMember.enumType.TeamFounderAcceptRole;
+import com.example.baseball.teamMember.enumType.TeamRoleEnumType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -53,7 +54,7 @@ public class TeamMemberEntity {
 
     // 팀에서의 역활
     @Column(columnDefinition = "VARCHAR(255) DEFAULT 0 COMMENT '팀 역활'")
-    private Integer teamRole;
+    private TeamRoleEnumType teamRole;
 
     // 팀 가입 이유
     @Column(columnDefinition = "TEXT DEFAULT 0 COMMENT '팀 가입 이유'")

@@ -1,6 +1,6 @@
 package com.example.baseball.teamLineup;
 
-import com.example.baseball.teamMember.TeamMemberEntity;
+import com.example.baseball.teamMember.entity.TeamMemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
