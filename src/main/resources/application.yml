@@ -15,4 +15,15 @@ spring:
     level:
       org.hibernate.SQL: DEBUG
       org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
+cloud:
+  aws:
+    s3:
+      bucket: baseball
+    credentials:
+      access-key: AKIAUAFFK4MNSKTZ5UTK
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
