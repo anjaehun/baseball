@@ -1,4 +1,4 @@
-package com.example.baseball.baseballStadium.entity;
+package com.example.baseball.baseballStadiumAndReservation.entity;
 
 import com.example.baseball.user.entity.UserEntity;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class BaseballStadiumEntity {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
-    private Integer baseballStadiumReservationId;
+    private Integer baseballStadiumId;
 
     @ManyToOne
     @JoinColumn(name = "id")

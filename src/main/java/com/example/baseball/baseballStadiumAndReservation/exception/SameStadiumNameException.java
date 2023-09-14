@@ -1,4 +1,4 @@
-package com.example.baseball.baseballStadium.exception;
+package com.example.baseball.baseballStadiumAndReservation.exception;
 
 public class SameStadiumNameException extends Throwable {
     public SameStadiumNameException(String message) {

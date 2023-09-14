@@ -30,6 +30,8 @@ public class SecurityConfiguration {
                 .antMatchers("/api/v1/team/list/**").permitAll()
                 .antMatchers("/api/v1/hitter/**").permitAll()
                 .antMatchers("/api/v1/pitcher/**").permitAll()
+                .antMatchers("/api/v1/stadium/list").permitAll()
+                .antMatchers("/api/v1/stadium/list/**").permitAll()
                 .antMatchers("/api/v1/team/teamMember/list/**").permitAll()
                 .antMatchers("/api/v1/team/teamMember/{teamId}/membership/application").hasAuthority("USER")
                 .antMatchers("/api/v1/team/create").hasAuthority("USER")

@@ -1,13 +1,14 @@
-package com.example.baseball.baseballStadium.service;
+package com.example.baseball.baseballStadiumAndReservation.service;
 
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.example.baseball.baseballStadium.entity.BaseballStadiumEntity;
-import com.example.baseball.baseballStadium.exception.SameStadiumNameException;
-import com.example.baseball.baseballStadium.repository.BaseballStadiumRepository;
-import com.example.baseball.baseballStadium.request.StadiumPostRequest;
-import com.example.baseball.baseballStadium.response.BaseballStadiumPostResponse;
+import com.example.baseball.baseballStadiumAndReservation.entity.BaseballStadiumEntity;
+import com.example.baseball.baseballStadiumAndReservation.exception.SameStadiumNameException;
+import com.example.baseball.baseballStadiumAndReservation.repository.BaseballStadiumRepository;
+import com.example.baseball.baseballStadiumAndReservation.request.StadiumPostRequest;
+import com.example.baseball.baseballStadiumAndReservation.response.BaseballStadiumListResponse;
+import com.example.baseball.baseballStadiumAndReservation.response.BaseballStadiumPostResponse;
 import com.example.baseball.user.entity.UserEntity;
 import com.example.baseball.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,8 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class BaseBallStadiumService {
@@ -151,5 +154,23 @@ public class BaseBallStadiumService {
         response.setPostOk("등록이 완료되었습니다.");
 
         return response;
+    }
+
+    public List<BaseballStadiumListResponse> getAllStadiums() {
+        List<BaseballStadiumEntity> stadiumEntities = baseballStadiumRepository.findAll();
+        return stadiumEntities.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    private BaseballStadiumListResponse mapToResponse(BaseballStadiumEntity entity) {
+        return BaseballStadiumListResponse.builder()
+                .stadiumName(entity.getStadiumName())
+                .stadiumDescription(entity.getStadiumDescription())
+                .region(entity.getRegion())
+                .stadiumReprecentImage(entity.getStadiumReprecentImage())
+                .reservationStartTime(entity.getPossibleReservationStartTime())
+                .reservationEndTime(entity.getPossibleReservationEndTime())
+                .build();
     }
 }

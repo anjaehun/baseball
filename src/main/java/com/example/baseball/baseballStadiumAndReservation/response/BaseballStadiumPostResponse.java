@@ -1,4 +1,4 @@
-package com.example.baseball.baseballStadium.response;
+package com.example.baseball.baseballStadiumAndReservation.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
