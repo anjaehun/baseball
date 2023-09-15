@@ -25,12 +25,12 @@ public class BaseballStadiumEntity {
 
     @ManyToOne
     @JoinColumn(name = "id")
-    private UserEntity id;
+    private UserEntity user;
 
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '창설자 닉네임'")
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '스타디움 닉네임'")
     private String stadiumOwnerNickname;
 
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '창설자 네임'")
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '스타디움 주인 이름 '")
     private String stadiumOwnerName;
 
     @Column(columnDefinition = "VARCHAR(255) COMMENT '경기장 이름'")
@@ -52,7 +52,7 @@ public class BaseballStadiumEntity {
     // 예약 가능 종료 시간
     private LocalTime possibleReservationEndTime;
 
-    // 예약 가능 종료 시간
+    // 등록시간
     private LocalDateTime postDate;
 
 }

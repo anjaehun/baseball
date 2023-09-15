@@ -1,5 +1,6 @@
 package com.example.baseball.baseballStadiumAndReservation.controller;
 
+import com.example.baseball.baseballStadiumAndReservation.entity.BaseballStadiumEntity;
 import com.example.baseball.baseballStadiumAndReservation.exception.SameStadiumNameException;
 import com.example.baseball.baseballStadiumAndReservation.request.StadiumPostRequest;
 import com.example.baseball.baseballStadiumAndReservation.response.BaseballStadiumListResponse;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/stadium")
@@ -25,7 +27,12 @@ public class BaseballStadiumController {
         this.baseBallStadiumService = baseBallStadiumService;
     }
 
-
+    /**
+     * 1건 등록
+     * @param stadiumPostRequest
+     * @param fileStadium
+     * @return
+     */
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('STADIUM_USER')")
     public ResponseEntity<Object> createTeamBoardGeneral(
@@ -41,9 +48,28 @@ public class BaseballStadiumController {
         }
     }
 
+    /**
+     * 리스트 전체 보기
+     * @return
+     */
     @GetMapping("/list")
-    public List<BaseballStadiumListResponse> getAllStadiums() {
+    public List<BaseballStadiumEntity> getAllStadiums() {
         return baseBallStadiumService.getAllStadiums();
     }
+
+    /**
+     * 1건 등록
+     * @param baseballStadiumId
+     * @return
+     */
+    @GetMapping("/list/{baseballStadiumId}")
+    public ResponseEntity<Optional<BaseballStadiumEntity>> getStadiumById(@PathVariable Long baseballStadiumId) {
+        // baseballStadiumId를 사용하여 해당 스타디움 정보를 데이터베이스에서 가져오는 코드를 작성하세요.
+        Optional<BaseballStadiumEntity> stadium = baseBallStadiumService.getStadiumById(baseballStadiumId);
+
+        return ResponseEntity.ok(stadium);
+
+    }
+
 
 }

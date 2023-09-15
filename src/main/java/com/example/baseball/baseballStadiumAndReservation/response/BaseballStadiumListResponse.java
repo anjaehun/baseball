@@ -17,6 +17,7 @@ public class BaseballStadiumListResponse {
     private String stadiumDescription;
     private String region;
     private String stadiumReprecentImage;
+    private Integer baseballStadiumId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     private LocalTime reservationStartTime;
 

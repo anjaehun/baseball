@@ -132,11 +132,23 @@ public class BaseBallStadiumService {
 
         boolean isTeamNameUnique = !baseballStadiumRepository.existsByStadiumName(request.getStadiumName());
 
+        Optional<UserEntity> existingNickname = userRepository.findByNickname(nickname);
+
+        UserEntity user = null;
+
+        if (existingNickname.isPresent()) {
+            user = existingNickname.get();
+        } 
+
+
+        Optional<UserEntity> existingEmail = userRepository.findByNickname(nickname);
+
         if (!isTeamNameUnique) {
-            throw new SameStadiumNameException("팀의 이름이 중복되었습니다. 다시 시도해 주세요");
+            throw new SameStadiumNameException("경기장의 이름이 중복되었습니다. 다시 시도해 주세요");
         }
 
         var baseballStadium = BaseballStadiumEntity.builder()
+                .user(user)
                 .stadiumOwnerName(name)
                 .stadiumOwnerNickname(nickname)
                 .stadiumName(request.getStadiumName())
@@ -156,21 +168,21 @@ public class BaseBallStadiumService {
         return response;
     }
 
-    public List<BaseballStadiumListResponse> getAllStadiums() {
+    public List<BaseballStadiumEntity> getAllStadiums() {
         List<BaseballStadiumEntity> stadiumEntities = baseballStadiumRepository.findAll();
-        return stadiumEntities.stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        return stadiumEntities;
+    }
+    public Optional<BaseballStadiumEntity> getStadiumById(Long stadiumId) {
+        // 스타디움 ID를 사용하여 데이터베이스에서 스타디움 정보를 조회합니다.
+        Optional<BaseballStadiumEntity> optionalStadium = baseballStadiumRepository.findById(Math.toIntExact(stadiumId));
+
+        if (!(optionalStadium.isPresent())) {
+            return null;
+        }
+
+        return optionalStadium;
+
     }
 
-    private BaseballStadiumListResponse mapToResponse(BaseballStadiumEntity entity) {
-        return BaseballStadiumListResponse.builder()
-                .stadiumName(entity.getStadiumName())
-                .stadiumDescription(entity.getStadiumDescription())
-                .region(entity.getRegion())
-                .stadiumReprecentImage(entity.getStadiumReprecentImage())
-                .reservationStartTime(entity.getPossibleReservationStartTime())
-                .reservationEndTime(entity.getPossibleReservationEndTime())
-                .build();
-    }
+
 }
