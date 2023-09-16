@@ -28,6 +28,7 @@ public class SecurityConfiguration {
                 .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/api/v1/team/list").permitAll()
                 .antMatchers("/api/v1/team/list/**").permitAll()
+                .antMatchers("/api/v1/stadium/reservation/list/**").permitAll()
                 .antMatchers("/api/v1/hitter/**").permitAll()
                 .antMatchers("/api/v1/pitcher/**").permitAll()
                 .antMatchers("/api/v1/stadium/list").permitAll()
@@ -37,6 +38,7 @@ public class SecurityConfiguration {
                 .antMatchers("/api/v1/team/create").hasAuthority("USER")
                 .antMatchers("/api/v1/stadium/reservation/home/{baseballStadiumId}").hasAuthority("USER")
                 .antMatchers("/api/v1/stadium/create").hasAuthority("STADIUM_USER")
+                .antMatchers("/api/v1/stadium/reservation/away/{stadiumReservationId}").hasAuthority("USER")
                  // 여기에 경로와 권한 설정 추가
                 .anyRequest().authenticated()
                 .and()

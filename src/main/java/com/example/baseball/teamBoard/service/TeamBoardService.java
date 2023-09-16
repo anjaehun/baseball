@@ -187,10 +187,6 @@ public class TeamBoardService {
 
         TeamBoardEntity board = boardOptional.orElseThrow(() -> new NoBoardByOneException("게시글을 찾을 수 없습니다"));
 
-        System.out.println("board.getTeamMemberNickname() = " + board.getTeamMemberNickname());
-
-        System.out.println("nickname = " + nickname);
-
         if(!(nickname.equals(board.getTeamMemberNickname()))) {
             throw new NotTheAuthorOfThePostException("게시글작성자가 아닙니다.");
         }

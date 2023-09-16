@@ -2,8 +2,10 @@ package com.example.baseball.baseballStadiumAndReservation.service;
 
 import com.example.baseball.baseballStadiumAndReservation.entity.BaseballStadiumEntity;
 import com.example.baseball.baseballStadiumAndReservation.entity.StadiumReservationEntity;
+import com.example.baseball.baseballStadiumAndReservation.enumType.AwayReservationOkRole;
 import com.example.baseball.baseballStadiumAndReservation.enumType.HomeReservationOkRole;
 import com.example.baseball.baseballStadiumAndReservation.exception.AlreadyReservationException;
+import com.example.baseball.baseballStadiumAndReservation.exception.NoReservationException;
 import com.example.baseball.baseballStadiumAndReservation.exception.NoTeamByNicknameException;
 import com.example.baseball.baseballStadiumAndReservation.exception.NotStadiumException;
 import com.example.baseball.baseballStadiumAndReservation.repository.BaseballStadiumRepository;
@@ -114,6 +116,7 @@ public class StadiumReservationService {
         var stadiumReservation = StadiumReservationEntity.builder()
                 .baseballStadium(baseballStadium)
                 .homeReservationOkRole(HomeReservationOkRole.HOME_RESERVATION_OK)
+                .awayReservationOkRole(AwayReservationOkRole.AWAY_RESERVATION_HOLD)
                 .homeTeam(optionalStadium.get().getTeamName())
                 .awayTeam("미정")
                 .startDateTime(wantStartDateTime)
@@ -131,4 +134,45 @@ public class StadiumReservationService {
     }
 
 
+    public BaseballStadiumPostResponse awayReservation(
+           int StadiumReservationId) throws NoReservationException, NoTeamByNicknameException {
+
+        String nickname = userNickname();
+
+        Optional<TeamEntity> optionalStadium = teamRepository.findByMasterNickname(nickname);
+
+        String homeTeam = optionalStadium.get().getTeamName();
+
+        if(!optionalStadium.isPresent()){
+            throw new NoTeamByNicknameException("귀하의 팀이 없습니다. 팀을 생성하고 등록해 주세요");
+        }
+
+        Optional<StadiumReservationEntity> optionalBaseballStadium = stadiumReservationRepository.findById(StadiumReservationId);
+
+        StadiumReservationEntity stadiumReservation = optionalBaseballStadium.orElseThrow(() -> new NoReservationException("게시글을 찾을 수 없습니다"));
+
+        if(homeTeam.equals(stadiumReservation.getHomeTeam())){
+            throw new NoReservationException("이미 홈팀으로 예약을 하셨습니다.");
+        }
+
+        stadiumReservation.setAwayReservationOkRole(AwayReservationOkRole.AWAY_RESERVATION_OK);
+        stadiumReservation.setAwayTeam(homeTeam);
+
+        stadiumReservationRepository.save(stadiumReservation);
+
+        var postOk = BaseballStadiumPostResponse.builder().
+                postOk("어웨이팀 등록이 완료 되었습니다. 감사합니다!").
+                build();
+
+        return  postOk;
+    }
+
+    public Optional<StadiumReservationEntity> getReservationAll(int stadiumReservationId) {
+
+        Optional<StadiumReservationEntity> optionalBaseballStadium = stadiumReservationRepository.findById(stadiumReservationId);
+
+
+
+        return optionalBaseballStadium;
+    }
 }
