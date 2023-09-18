@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -167,12 +168,23 @@ public class StadiumReservationService {
         return  postOk;
     }
 
-    public Optional<StadiumReservationEntity> getReservationAll(int stadiumReservationId) {
+    public Optional<StadiumReservationEntity> getReservationById(int stadiumReservationId) {
+
+
 
         Optional<StadiumReservationEntity> optionalBaseballStadium = stadiumReservationRepository.findById(stadiumReservationId);
 
 
 
         return optionalBaseballStadium;
+    }
+
+    public List<StadiumReservationEntity> getReservationAll(int baseballStadiumId) {
+        BaseballStadiumEntity baseballStadium = baseballStadiumRepository.findById(baseballStadiumId)
+                .orElseThrow(() -> new EntityNotFoundException("경기장이 없습니다."));
+
+        List<StadiumReservationEntity> ReservationAllByStadiumId = stadiumReservationRepository.findAllByBaseballStadium(baseballStadium);
+        // 나머지 로직 작성
+        return ReservationAllByStadiumId;
     }
 }

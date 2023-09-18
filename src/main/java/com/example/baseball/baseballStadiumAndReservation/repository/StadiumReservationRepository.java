@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface StadiumReservationRepository extends JpaRepository<StadiumReservationEntity, Integer> {
 
     List<StadiumReservationEntity> findAllByBaseballStadium(BaseballStadiumEntity BaseballStadium);
+
 }
 

@@ -11,4 +11,6 @@ public interface HitterRecordRepository extends JpaRepository<HitterRecordEntity
 
 
     Optional<HitterRecordEntity> findByTeamMember(TeamMemberEntity teamMember);
+
+    HitterRecordEntity findByNameAndTeamName(String hitterName, String attackTeamName);
 }

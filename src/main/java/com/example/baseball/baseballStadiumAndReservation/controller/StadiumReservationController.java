@@ -1,5 +1,6 @@
 package com.example.baseball.baseballStadiumAndReservation.controller;
 
+import com.example.baseball.baseballStadiumAndReservation.entity.BaseballStadiumEntity;
 import com.example.baseball.baseballStadiumAndReservation.entity.StadiumReservationEntity;
 import com.example.baseball.baseballStadiumAndReservation.exception.NoReservationException;
 import com.example.baseball.baseballStadiumAndReservation.exception.NotStadiumException;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -73,11 +75,29 @@ public class StadiumReservationController {
         }
     }
 
-    @GetMapping("/list/{stadiumReservationId}")
-    public ResponseEntity<Object> getTeamById(@PathVariable Long stadiumReservationId) {
+    /**
+     * 예약 전체 보기
+     * @param baseballStadiumId
+     * @return
+     */
+    @GetMapping("/list/all/{baseballStadiumId}")
+    public ResponseEntity<Object> getTeamById(@PathVariable Long baseballStadiumId) {
 
-        Optional<StadiumReservationEntity> team = stadiumReservationService.getReservationAll(Math.toIntExact(stadiumReservationId));
+        List<StadiumReservationEntity> team = stadiumReservationService.getReservationAll(Math.toIntExact(baseballStadiumId));
         return ResponseEntity.ok(team);
-
     }
+
+    /**
+     * 예약한개보기
+     * @param stadiumReservationId
+     * @return
+     */
+    @GetMapping("/list/{stadiumReservationId}")
+    public ResponseEntity<Object> getReservationId(@PathVariable Long stadiumReservationId) {
+
+        Optional<StadiumReservationEntity> team = stadiumReservationService.getReservationById(Math.toIntExact(stadiumReservationId));
+        return ResponseEntity.ok(team);
+    }
+
+
 }
