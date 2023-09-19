@@ -1,5 +1,7 @@
 package com.example.baseball.team.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.example.baseball.hitterRecord.HitterRecordEntity;
 import com.example.baseball.hitterRecord.repository.HitterRecordRepository;
 import com.example.baseball.pitcherRecord.PitcherRecordEntity;
@@ -41,20 +43,27 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository ;
     private final PitcherRecordRepository pitcherRecordRepository;
+
     private final HitterRecordRepository hitterRecordRepository;
+
     private final TeamPerformanceRepository teamPerformanceRepository;
 
+    private final ObjectMapper objectMapper;
+
+    private final AmazonS3 amazonS3;
 
 
 
 
-    public TeamService(UserRepository userRepository, TeamRepository teamRepository, TeamMemberRepository teamMemberRepository, PitcherRecordRepository pitcherRecordRepository, HitterRecordRepository hitterRecordRepository, TeamPerformanceRepository teamPerformanceRepository) {
+    public TeamService(UserRepository userRepository, TeamRepository teamRepository, TeamMemberRepository teamMemberRepository, PitcherRecordRepository pitcherRecordRepository, HitterRecordRepository hitterRecordRepository, TeamPerformanceRepository teamPerformanceRepository, ObjectMapper objectMapper, AmazonS3 amazonS3) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.teamMemberRepository = teamMemberRepository;
         this.pitcherRecordRepository = pitcherRecordRepository;
         this.hitterRecordRepository = hitterRecordRepository;
         this.teamPerformanceRepository = teamPerformanceRepository;
+        this.objectMapper = objectMapper;
+        this.amazonS3 = amazonS3;
 
     }
 
@@ -86,6 +95,31 @@ public class TeamService {
         return nickname;
     }
 
+    private String generateUniqueFileName(String originalFileName) {
+        // 파일 이름을 고유하게 생성하는 로직
+        // 예를 들어, UUID 또는 타임스탬프를 사용할 수 있습니다.
+        return UUID.randomUUID().toString() + "-" + originalFileName;
+    }
+
+    public String uploadImageToS3(MultipartFile file) {
+        try {
+            String fileName = generateUniqueFileName(file.getOriginalFilename());
+            String bucketNane = "baseball";
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+
+            amazonS3.putObject(bucketNane, fileName, file.getInputStream(), metadata);
+
+            // 업로드한 파일의 URL 생성
+            String fileUrl = amazonS3.getUrl(bucketNane, fileName).toString();
+
+            return fileUrl;
+        } catch (IOException e) {
+            // 업로드 실패 처리
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
     /**
@@ -114,7 +148,8 @@ public class TeamService {
 
         return name;
     }
-    public TeamEntity postTeam(TeamPostRequestPart request) throws SameTeamNameException, NoTeamByOneException, JsonProcessingException {
+    public TeamEntity postTeam(TeamPostRequestPart request, MultipartFile teamImg1,MultipartFile teamLogo) throws SameTeamNameException, NoTeamByOneException, JsonProcessingException {
+
 
 
         String name = username();
@@ -134,7 +169,9 @@ public class TeamService {
 
         Optional<UserEntity> existingEmail = userRepository.findByNickname(nickname);
         UserEntity user;
-
+        // s3 부분
+        String createTeamImg = uploadImageToS3(teamImg1);
+        String createTeamLogo = uploadImageToS3(teamLogo);
 
         if (existingEmail.isPresent()) {
             user = existingEmail.get();
@@ -153,8 +190,8 @@ public class TeamService {
                 .teamDescription(request.getTeamDescription())
                 .teamName(teamName)
                 .mainCoach(mainCoach)
-                .teamImg(request.getTeamImg())
-                .teamLogoImage(request.getTeamLogoImage())
+                .teamImg(createTeamImg)
+                .teamLogoImage(createTeamLogo)
                 .registerDt(currentTime)
                 .id(user)
                 .build();
@@ -258,7 +295,7 @@ public class TeamService {
 
 
 
-            return response;
+        return response;
 
     }
 

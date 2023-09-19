@@ -15,10 +15,9 @@ public interface TeamMemberRepository extends JpaRepository<TeamMemberEntity, In
 
     List<TeamMemberEntity> findByTeam(TeamEntity team);
 
-    Optional<Object> findByNickname(String nickname);
 
     Optional<Object> findByTeamAndNickname(TeamEntity team, String nickname);
 
 
-
+    Optional<TeamMemberEntity> findByNameAndJerseyNumber(String name, Integer jerseyNumber);
 }

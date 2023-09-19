@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface PitcherRecordRepository extends JpaRepository<PitcherRecordEntity, Integer> {
 
     Optional<PitcherRecordEntity> findByTeamMember(TeamMemberEntity teamMember);
+
+    PitcherRecordEntity findByNameAndTeamName(String pitcherName, String defendTeamName);
 }

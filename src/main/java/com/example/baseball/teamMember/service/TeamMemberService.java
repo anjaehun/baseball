@@ -182,7 +182,7 @@ public class TeamMemberService {
                 .orElseThrow(() -> new NoTeamByOneException("팀멤버가 없습니다"));
 
         if(teamMember.getTeamFounderAcceptRole().equals(TeamFounderAcceptRole.TEAM_MEMBER_OK)){
-            throw new approvedTeamMemberException("이미 팀 멤버입니다.");
+            throw new approvedTeamMemberException("팀창설자이자 승인자가 아닙니다. 다시 확인해주세요.");
         }
 
         if(!(nickname.equals(teamMasterNickname))){

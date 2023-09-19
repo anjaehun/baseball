@@ -30,9 +30,11 @@ public class TeamController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Object> createTeam(@RequestBody TeamPostRequestPart request) {
+    public ResponseEntity<Object> createTeam(@RequestPart TeamPostRequestPart request,
+                                             @RequestPart("fileByTeamImg") MultipartFile fileByTeamImg,
+                                             @RequestPart("fileByTeamLoge") MultipartFile fileByTeamLoge) {
         try {
-            TeamEntity createdTeam = teamService.postTeam(request);
+            TeamEntity createdTeam = teamService.postTeam(request, fileByTeamImg,fileByTeamLoge);
             return new ResponseEntity<>(createdTeam, HttpStatus.CREATED);
         } catch (SameTeamNameException e) {
             Map<String, String> response = new HashMap<>();
